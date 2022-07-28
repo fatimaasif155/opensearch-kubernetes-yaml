@@ -17,15 +17,31 @@ Then create the secrets by running
 Choose the number of master and data nodes you want in your cluster and modify the replicas count in the opensearch/master.yml and opensearch/data.yml file.
 
 Now launch your opensearch cluster 
-
-*kubectl apply -f opensearch/*
-
+```
+kubectl apply -f opensearch/
+```
 # Opensearch Dashboard
 
 Now launch the dashboard to access the UI
 
 *kubectl apply -f dashboard/*
 
+# Security
+
+To add the security plugin, Exec into the master pod and apply the following commands
+
+kubectl exec -it opensearch-master-0 -- /bin/bash
+chmod +x plugins/opensearch-security/tools/securityadmin.sh
+cd plugins/opensearch-security/tools
+./securityadmin.sh -cd ../securityconfig/ -icl -nhnv \
+  -cacert ../../../config/certificates/ca/ca.pem \
+  -cert ../../../config/certificates/admin/admin.pem \
+  -key ../../../config/certificates/admin/admin.key
+  
+ soon you will see the success message.
+
 # Browser
 
 Run *minikibe service list* to get the public IP address of the dashboard.
+
+https://IPaddress:port/
